@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reservation Endorsement Tracker</title>
+  <style>
+    /* General styling */
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f8f9fa;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+
+    h2 {
+      text-align: center;
+      padding: 10px;
+      background-color: #007bff;
+      color: white;
+      margin: 0;
+      border-bottom: 2px solid #0056b3;
+    }
+
+    .container {
+      width: 70%;
+      margin: 30px auto;
+      padding: 20px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-container {
+      padding: 15px;
+      background-color: #fff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    /* Input styling */
+    input, select, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      margin-bottom: 12px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+      background-color: #f9f9f9;
+    }
+
+    textarea {
+      height: 80px;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .table-container {
+      margin-top: 20px;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid #ddd;
+      font-size: 12px;
+    }
+
+    th, td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .green {
+      background-color: #28a745;
+      color: white;
+    }
+
+    .yellow {
+      background-color: #ffc107;
+      color: black;
+    }
+
+    .delete-btn {
+      background-color: #dc3545;
+      color: white;
+      padding: 6px 12px;
+      border: none;
+      cursor: pointer;
+      font-size: 12px;
+      margin: 4px;
+      border-radius: 4px;
+    }
+
+    .delete-btn:hover {
+      background-color: #c82333;
+    }
+
+    .undo-btn {
+      background-color: #6c757d;
+      color: white;
+      padding: 6px 12px;
+      border: none;
+      cursor: pointer;
+      font-size: 12px;
+      margin: 4px;
+      border-radius: 4px;
+    }
+
+    .undo-btn:hover {
+      background-color: #5a6268;
+    }
+
+    .status-btn {
+      padding: 6px 12px;
+      border: none;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: bold;
+      border-radius: 4px;
+      margin: 4px;
+    }
+
+    .status-btn.green {
+      background-color: #28a745;
+      color: white;
+    }
+
+    .status-btn.yellow {
+      background-color: #ffc107;
+      color: black;
+    }
+
+    .undo-container {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      background-color: #f1f1f1;
+      margin-top: 20px;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Reservation Endorsement Tracker</h2>
+
+  <div class="container">
+    <!-- Data Entry Form -->
+    <div class="form-container">
+      <form id="endorsement-form">
+        <!-- Zendesk and Sabre locators -->
+        <div>
+          <label for="zendesk-new">Zendesk Locator (NEW):</label>
+          <input type="text" id="zendesk-new">
+        </div>
+
+        <div>
+          <label for="zendesk-old">Zendesk Locator (OLD):</label>
+          <input type="text" id="zendesk-old">
+        </div>
+
+        <div>
+          <label for="sabre-locator">Sabre Locator:</label>
+          <input type="text" id="sabre-locator">
+        </div>
+
+        <!-- IC Name and Issue -->
+        <div>
+          <label for="ic-name">IC Name:</label>
+          <input type="text" id="ic-name">
+        </div>
+
+        <div>
+          <label for="issue">Issue:</label>
+          <select id="issue">
+            <option value="WAITING FOR IC APPROVAL">WAITING FOR IC APPROVAL</option>
+            <option value="WAITING FOR COMMISSION">WAITING FOR COMMISSION</option>
+            <option value="SEND TO TZELL FOR ADJUSTMENTS">SEND TO TZELL FOR ADJUSTMENTS</option>
+          </select>
+        </div>
+
+        <!-- Agent and Action Fields -->
+        <div>
+          <label for="agent-name">Agent Name:</label>
+          <select id="agent-name">
+            <option value="">Select Agent</option>
+            <option value="Allen Perez">Allen Perez</option>
+            <option value="Jacqueline Penaroyo">Jacqueline Penaroyo</option>
+            <option value="Jelohim Gabales">Jelohim Gabales</option>
+            <option value="Lovely Grace Ruizo">Lovely Grace Ruizo</option>
+            <option value="Noel Gamalo">Noel Gamalo</option>
+            <option value="Princess Lyn Mabangis">Princess Lyn Mabangis</option>
+            <option value="Rex Abella">Rex Abella</option>
+            <option value="Abdalla Gurondaya">Abdalla Gurondaya</option>
+            <option value="Carmela Kristine Lopez">Carmela Kristine Lopez</option>
+          </select>
+        </div>
+
+        <!-- Notes and Action Needed -->
+        <div>
+          <label>Notes:</label><br>
+          <input type="checkbox" id="need-service-fee"> NEED SERVICE FEE<br>
+          <input type="checkbox" id="need-verify-commission"> NEED VERIFY COMMISSION<br>
+          <input type="checkbox" id="need-credit-card"> NEED CREDIT CARD INFORMATION<br>
+        </div>
+
+        <div>
+          <label for="action-needed">Action Needed:</label>
+          <textarea id="action-needed" rows="3"></textarea>
+        </div>
+
+        <button type="submit">Add Data</button>
+      </form>
+    </div>
+
+    <!-- Data Table -->
+    <div class="table-container">
+      <table id="endorsement-table">
+        <thead>
+          <tr>
+            <th>Action</th>
+            <th>Timestamp</th>
+            <th>Zendesk NEW</th>
+            <th>Zendesk OLD</th>
+            <th>Sabre Locator</th>
+            <th>IC Name</th>
+            <th>Issue</th>
+            <th>Agent Name</th>
+            <th>Notes</th>
+            <th>Action Needed</th>
+            <th>Status</th>
+            <th>History</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Undo Button Section Always Visible -->
+  <div class="undo-container">
+    <button class="undo-btn" id="undo-btn">Undo Last Entry</button>
+  </div>
+
+  <script>
+    let lastAddedRow = null; // Store the last added row for undo functionality
+
+    // Event listener for adding data
+    document.getElementById('endorsement-form').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const zendeskNew = document.getElementById('zendesk-new').value;
+      const zendeskOld = document.getElementById('zendesk-old').value;
+      const sabreLocator = document.getElementById('sabre-locator').value;
+      const icName = document.getElementById('ic-name').value;
+      const issue = document.getElementById('issue').value;
+      const agentName = document.getElementById('agent-name').value;
+      const notes = [];
+      if (document.getElementById('need-service-fee').checked) notes.push('NEED SERVICE FEE');
+      if (document.getElementById('need-verify-commission').checked) notes.push('NEED VERIFY COMMISSION');
+      if (document.getElementById('need-credit-card').checked) notes.push('NEED CREDIT CARD INFORMATION');
+      const actionNeeded = document.getElementById('action-needed').value;
+
+      const timestamp = new Date().toLocaleString("en-US", { timeZone: "America/New_York" });
+
+      const table = document.getElementById('endorsement-table').querySelector('tbody');
+      const newRow = table.insertRow();
+
+      newRow.innerHTML = `
+        <td>
+          <button class="delete-btn" onclick="deleteRow(this)">Delete</button>
+          <button class="undo-btn" onclick="undoRow(this)">Undo</button>
+        </td>
+        <td>${timestamp}</td>
+        <td>${zendeskNew}</td>
+        <td>${zendeskOld}</td>
+        <td>${sabreLocator}</td>
+        <td>${icName}</td>
+        <td>${issue}</td>
+        <td>
+          <select class="agent-name-dropdown">
+            <option value="${agentName}">${agentName}</option>
+            <option value="Allen Perez">Allen Perez</option>
+            <option value="Jacqueline Penaroyo">Jacqueline Penaroyo</option>
+            <option value="Jelohim Gabales">Jelohim Gabales</option>
+            <option value="Lovely Grace Ruizo">Lovely Grace Ruizo</option>
+            <option value="Noel Gamalo">Noel Gamalo</option>
+            <option value="Princess Lyn Mabangis">Princess Lyn Mabangis</option>
+            <option value="Rex Abella">Rex Abella</option>
+            <option value="Abdalla Gurondaya">Abdalla Gurondaya</option>
+            <option value="Carmela Kristine Lopez">Carmela Kristine Lopez</option>
+          </select>
+        </td>
+        <td>${notes.join(', ')}</td>
+        <td><textarea class="editable-action">${actionNeeded}</textarea></td>
+        <td><button class="status-btn yellow" onclick="toggleStatus(this)">NEED ACTION</button></td>
+        <td>
+          <select class="history-dropdown">
+            <option value="">History</option>
+            <option value="Initial Data - ${timestamp} - Agent: ${agentName}">Initial Data - ${timestamp} - Agent: ${agentName}</option>
+          </select>
+          <button class="track-change-btn" onclick="trackChange(this)">Submit</button>
+        </td>
+      `;
+
+      lastAddedRow = newRow; // Save the last added row for undo functionality
+
+      // Clear input fields
+      document.getElementById('zendesk-new').value = '';
+      document.getElementById('zendesk-old').value = '';
+      document.getElementById('sabre-locator').value = '';
+      document.getElementById('ic-name').value = '';
+      document.getElementById('action-needed').value = '';
+      document.getElementById('need-service-fee').checked = false;
+      document.getElementById('need-verify-commission').checked = false;
+      document.getElementById('need-credit-card').checked = false;
+    });
+
+    // Undo specific row
+    function undoRow(button) {
+      const row = button.closest('tr');
+      row.remove();
+      lastAddedRow = null; // Reset last added row if undone
+    }
+
+    // Toggle status (DONE or NEED ACTION)
+    function toggleStatus(button) {
+      const status = button.innerText;
+      if (status === 'NEED ACTION') {
+        button.classList.remove('yellow');
+        button.classList.add('green');
+        button.innerText = 'DONE';
+      } else {
+        button.classList.remove('green');
+        button.classList.add('yellow');
+        button.innerText = 'NEED ACTION';
+      }
+    }
+
+    // Delete row
+    function deleteRow(button) {
+      const row = button.closest('tr');
+      row.remove();
+    }
+
+    // Track change and append to history
+    function trackChange(button) {
+      const row = button.closest('tr');
+      const actionNeeded = row.querySelector('.editable-action').value;
+      const agentName = row.querySelector('.agent-name-dropdown').value;
+      const historyDropdown = row.querySelector('.history-dropdown');
+
+      // Get current timestamp and create a new history entry
+      const timestamp = new Date().toLocaleString("en-US", { timeZone: "America/New_York" });
+      const newHistoryEntry = `Action Changed - ${timestamp} - Agent: ${agentName} - Action: ${actionNeeded}`;
+
+      // Add the new history entry to the dropdown
+      const newOption = document.createElement('option');
+      newOption.value = newHistoryEntry;
+      newOption.textContent = newHistoryEntry;
+      historyDropdown.appendChild(newOption);
+      
+      // Optionally, set the history dropdown to show the most recent entry
+      historyDropdown.value = newHistoryEntry;
+    }
+
+    // Undo last added row
+    document.getElementById('undo-btn').addEventListener('click', function() {
+      if (lastAddedRow) {
+        lastAddedRow.remove();
+        lastAddedRow = null;
+      }
+    });
+  </script>
+</body>
+</html>
