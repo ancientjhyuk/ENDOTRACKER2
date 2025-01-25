@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Reservation Endorsement Tracker</title>
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBqEFTRNq4v1xdoPUvR16FvJyZkoowyuhg&callback=initMap">
+  </script>
   <style>
     /* General styling */
     body {
@@ -402,6 +405,14 @@
         lastAddedRow = null;
       }
     });
+  </script>
+    // Initialize the map when the API is loaded
+    function initMap() {
+      const map = new google.maps.Map(document.getElementById('map'), {
+        center: { lat: -34.397, lng: 150.644 }, // Coordinates for the map's center
+        zoom: 8
+      });
+    }
   </script>
 </body>
 </html>
